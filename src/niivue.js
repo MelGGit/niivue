@@ -6390,7 +6390,8 @@ Niivue.prototype.drawHighlightBorder = function (leftTopWidthHeight) {
   const xEnd = left + width;
   const yStart = top;
   const yEnd = top + height;
-
+  this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
+  
   this.drawLine(
     [xStart, yStart, xEnd, yStart],
     this.opts.borderHighlightWidth,
@@ -7113,9 +7114,14 @@ Niivue.prototype.draw2D = function (
   }
   // draw highlight border if it is enabled in options as well as if current mosue pos is in a slice tile
   if (this.opts.enableBorderHighlight) {
-    const tile = this.inSliceTile(this.mousePos[0], this.mousePos[1]);
-    if (tile >= 0) {
-      this.drawHighlightBorder(this.screenSlices[tile].leftTopWidthHeight);
+    let mouseInTile = (
+      this.mousePos[0] > leftTopWidthHeight[0] &&
+      this.mousePos[1] > leftTopWidthHeight[1] &&
+      this.mousePos[0] < leftTopWidthHeight[0] + leftTopWidthHeight[2] &&
+      this.mousePos[1] < leftTopWidthHeight[1] + leftTopWidthHeight[3]
+    )
+    if (mouseInTile > 0) {
+      this.drawHighlightBorder(leftTopWidthHeight);
     }
   }
 
